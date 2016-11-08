@@ -40,7 +40,7 @@ public class ScriptAppState extends AbstractAppState {
     /**
      * Script variables.
      */
-    protected boolean if_ = false;
+    protected boolean if_ = true;
     protected HashMap<String, String> variables = new HashMap();
 
     /**
@@ -102,8 +102,8 @@ public class ScriptAppState extends AbstractAppState {
         int commandMark = -1;
         HashMap<String, String> commandData = new HashMap();
         if (command.toLowerCase().equals("endif")) {
-            if_ = false;
-        } else if (!if_) {
+            if_ = true;
+        } else if (if_) {
             for (String subCommand : command.split("~")) {
                 if (i == 0) {
                     switch (subCommand.toLowerCase()) {
@@ -133,6 +133,9 @@ public class ScriptAppState extends AbstractAppState {
                     if (subCommand.startsWith("variable-")) {
                         String[] variable = subCommand.split("-");
                         subCommand = variables.get(variable[1]);
+                        if (subCommand == null) {
+                            subCommand = "null";
+                        }
                     }
                     switch (commandMark) {
                         case 0:
@@ -152,11 +155,49 @@ public class ScriptAppState extends AbstractAppState {
                                 String if1 = commandData.get("if-1");
                                 String if2 = commandData.get("if-2");
                                 String operator = commandData.get("if-Operator");
+                                switch (operator) {
+                                    case "=":
+                                        if_ = if1.equals(if2);
+                                        break;
+                                    case "!=":
+                                        if_ = !if1.equals(if2);
+                                        break;
+                                    default:
+                                        try {
+                                            int int1 = Integer.parseInt(if1);
+                                            int int2 = Integer.parseInt(if2);
+                                            switch (operator) {
+                                                case ">":
+                                                    if_ = int1 > int2;
+                                                    break;
+                                                case ">=":
+                                                    if_ = int1 >= int2;
+                                                    break;
+                                                case "<":
+                                                    if_ = int1 < int2;
+                                                    break;
+                                                case "<=":
+                                                    if_ = int1 <= int2;
+                                                    break;
+                                                default:
+                                                    Logger.getLogger("").log(Logger.Level.FATAL,
+                                                            "Script If command: " + command
+                                                            + "does not have proper operator");
+                                                    break;
+                                            }
+                                        } catch (Exception e) {
+                                            Logger.getLogger("").log(Logger.Level.FATAL,
+                                                    "Script If command: " + command
+                                                    + "does not use proper number syntax");
+                                        }
+                                        break;
+
+                                }
                             }
                             //commandMark == ScriptCommands.If.ordinal();
                             break;
                         case 2:
-                            Logger.getLogger("").log(Logger.Level.WARN, subCommand);
+                            Logger.getLogger("").log(Logger.Level.INFO, subCommand);
                             break;
                         case 3:
                             app.player.addItem(subCommand);
