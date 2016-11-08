@@ -4,12 +4,8 @@
  */
 package com.epicest.reusables.scripting;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.*;
+import java.util.logging.*;
 
 /**
  * Scripts to use in Runner.

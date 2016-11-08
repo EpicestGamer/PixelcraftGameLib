@@ -11,9 +11,7 @@ import com.jme3.math.*;
 import com.jme3.renderer.*;
 import com.jme3.scene.*;
 import com.jme3.scene.control.*;
-import java.util.HashMap;
-import java.util.logging.Level;
-import org.bushe.swing.event.Logger;
+import java.util.*;
 
 /**
  * Entity control.

@@ -4,7 +4,7 @@
  */
 package com.epicest.reusables.scripting;
 
-import com.jme3.scene.Spatial;
+import com.jme3.scene.*;
 
 /**
  * Runner to run a Script

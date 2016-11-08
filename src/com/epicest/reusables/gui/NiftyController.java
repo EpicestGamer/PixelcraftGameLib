@@ -4,20 +4,9 @@
  */
 package com.epicest.reusables.gui;
 
-import com.epicest.reusables.PixelApplication;
-import com.jme3.app.Application;
-import com.jme3.app.SimpleApplication;
-import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.NiftyEventSubscriber;
-import de.lessvoid.nifty.controls.Button;
-import de.lessvoid.nifty.controls.ButtonClickedEvent;
-import de.lessvoid.nifty.controls.Console;
-import de.lessvoid.nifty.controls.ConsoleCommands;
-import de.lessvoid.nifty.controls.ConsoleExecuteCommandEvent;
-import de.lessvoid.nifty.elements.Element;
-import de.lessvoid.nifty.screen.Screen;
-import de.lessvoid.nifty.screen.ScreenController;
-import de.lessvoid.nifty.tools.Color;
+import com.epicest.reusables.*;
+import de.lessvoid.nifty.*;
+import de.lessvoid.nifty.screen.*;
 
 /**
  * Simple nifty ScreenController class.

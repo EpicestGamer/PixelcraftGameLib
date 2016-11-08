@@ -4,23 +4,15 @@
  */
 package com.epicest.reusables.interactable;
 
-import com.epicest.reusables.PixelApplication;
-import com.epicest.reusables.scripting.ScriptAppState;
-import com.epicest.reusables.entity.GameCharacterControl;
-import com.epicest.reusables.scripting.Runner;
-import com.epicest.reusables.scripting.preset.OnDoor;
-import com.epicest.reusables.scripting.preset.OnItem;
-import com.jme3.app.Application;
-import com.jme3.app.state.AbstractAppState;
-import com.jme3.app.state.AppStateManager;
-import com.jme3.collision.CollisionResult;
-import com.jme3.collision.CollisionResults;
-import com.jme3.input.controls.ActionListener;
-import com.jme3.math.Ray;
-import com.jme3.math.Vector3f;
-import com.jme3.scene.Geometry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.epicest.reusables.*;
+import com.epicest.reusables.scripting.*;
+import com.epicest.reusables.scripting.preset.*;
+import com.jme3.app.*;
+import com.jme3.app.state.*;
+import com.jme3.collision.*;
+import com.jme3.math.*;
+import com.jme3.scene.*;
+import java.util.logging.*;
 
 /**
  * Application state to service interaction between the player and in-game

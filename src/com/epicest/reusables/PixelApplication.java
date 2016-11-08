@@ -4,19 +4,17 @@
  */
 package com.epicest.reusables;
 
-import com.epicest.reusables.interactable.InteractablesAppState;
-import com.epicest.reusables.entity.player.CharacterInputAppState;
-import com.epicest.reusables.entity.GameCharacterControl;
-import com.epicest.reusables.scripting.ScriptAppState;
-import com.jme3.app.FlyCamAppState;
-import com.jme3.app.SimpleApplication;
-import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.collision.shapes.CollisionShape;
-import com.jme3.bullet.control.RigidBodyControl;
-import com.jme3.bullet.util.CollisionShapeFactory;
-import com.jme3.math.Vector3f;
-import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
+import com.epicest.reusables.interactable.*;
+import com.epicest.reusables.entity.player.*;
+import com.epicest.reusables.entity.*;
+import com.epicest.reusables.scripting.*;
+import com.jme3.app.*;
+import com.jme3.bullet.*;
+import com.jme3.bullet.collision.shapes.*;
+import com.jme3.bullet.control.*;
+import com.jme3.bullet.util.*;
+import com.jme3.math.*;
+import com.jme3.scene.*;
 
 /**
  *
@@ -25,47 +23,68 @@ import com.jme3.scene.Spatial;
 public abstract class PixelApplication extends SimpleApplication {
 
     /**
-     * Graphics
+     * Graphics.
      */
     protected Spatial curScene;
     /**
-     * Physics
+     * Physics.
      */
     protected BulletAppState bulletAS;
+    /**
+     * Worldspace physics object.
+     */
     protected RigidBodyControl landscape;
+    /**
+     * Gravity.
+     */
     protected Vector3f normalGravity = new Vector3f(0, -70f, 0);
     /**
-     * Player
+     * Player Input.
      */
     protected CharacterInputAppState charInAS;
+    /**
+     * Player Interaction.
+     */
     protected InteractablesAppState interactAS;
+    /**
+     * Player Entity.
+     */
     public GameCharacterControl player;
     /**
-     * Scripter
+     * Scripter.
      */
     protected ScriptAppState scriptAS;
     /**
-     * Loading Types
+     * Game isnt loading anything.
      */
     public static final byte LOAD_NONE = 0;
+    /**
+     * Game has something queued for a load.
+     */
     public static final byte LOAD_QUEUED = 1;
+    /**
+     * Game has started loading something.
+     */
     public static final byte LOAD_STARTED = 2;
+    /**
+     * Game has finished loading something.
+     */
     public static final byte LOAD_FINISHED = 4;
     /**
-     * Loading State
+     * Loading State.
      */
     protected byte loadState = LOAD_NONE;
     /**
-     * Loading Queue
+     * Loading Queue.
      */
     protected String load = "";
     /**
-     * states whether or not the game is in a world
+     * states whether or not the game is in a world.
      */
     protected boolean isInWorld = false;
 
     /**
-     * Loads a scene
+     * Loads a scene.
      */
     public void initScene(Spatial newScene) {
         //reset scene
@@ -85,13 +104,13 @@ public abstract class PixelApplication extends SimpleApplication {
     }
 
     /**
-     * Initializes assets Honestly I'm not even sure I need this
+     * Initializes assets Honestly I'm not even sure I need this.
      */
     protected abstract void assetsInit();
 
     /**
      * Initializes any graphical needs Such as putting the scene you are loading
-     * on the screen, and any filters
+     * on the screen, and any filters.
      */
     protected void displayInit() {
         //Display
@@ -109,7 +128,7 @@ public abstract class PixelApplication extends SimpleApplication {
     }
 
     /**
-     * Initializes physics
+     * Initializes physics.
      */
     protected void physicsInit() {
         //Initiallize AppState
@@ -130,9 +149,9 @@ public abstract class PixelApplication extends SimpleApplication {
     }
 
     /**
-     * Initializes the player physics object at a spawnpoint
+     * Initializes the player physics object at a spawnpoint.
      *
-     * @param spawnNode the name of a Node for the player to spawn at
+     * @param spawnNode the name of a Node for the player to spawn at.
      */
     protected void playerInit(String spawnNode) {
         stateManager.detach(stateManager.getState(FlyCamAppState.class));
@@ -161,7 +180,7 @@ public abstract class PixelApplication extends SimpleApplication {
     }
 
     /**
-     * Initialises ScriptAppState
+     * Initialises ScriptAppState.
      */
     private void scriptingInit() {
         scriptAS = new ScriptAppState();
@@ -171,14 +190,14 @@ public abstract class PixelApplication extends SimpleApplication {
     }
 
     /**
-     * Anything else needed to initialize during scene loading
+     * Anything else needed to initialize during scene loading.
      */
     protected abstract void otherInit();
 
     /**
-     * Is used to queue a scene to be loaded in the next update
+     * Is used to queue a scene to be loaded in the next update.
      *
-     * @param scene argument to later be used in sceneInit()
+     * @param scene argument to later be used in sceneInit().
      */
     public void loadScene(String scene) {
         onLoadStart();
@@ -187,9 +206,9 @@ public abstract class PixelApplication extends SimpleApplication {
     }
 
     /**
-     * Simple Update Loop
+     * Simple Update Loop.
      *
-     * @param tpf time since last update
+     * @param tpf time since last update.
      */
     @Override
     public void simpleUpdate(float tpf) {
@@ -212,19 +231,25 @@ public abstract class PixelApplication extends SimpleApplication {
         }
     }
 
+    /**
+     * Is run when loading starts.
+     */
     protected abstract void onLoadStart();
 
+    /**
+     * Is run when loading ends.
+     */
     protected abstract void onLoadFinish();
 
     /**
-     * @return rootNode
+     * @return rootNode.
      */
     public Node getRootNode() {
         return rootNode;
     }
 
     /**
-     * @return isInWorld
+     * @return isInWorld.
      */
     public boolean getIsInWorld() {
         return isInWorld;

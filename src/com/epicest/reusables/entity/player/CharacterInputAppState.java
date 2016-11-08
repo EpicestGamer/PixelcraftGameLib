@@ -4,28 +4,13 @@
  */
 package com.epicest.reusables.entity.player;
 
-import com.epicest.reusables.PixelApplication;
-import com.epicest.reusables.interactable.InteractablesAppState;
-import com.jme3.app.Application;
-import com.jme3.app.state.AbstractAppState;
-import com.jme3.app.state.AppStateManager;
-import com.jme3.input.InputManager;
-import com.jme3.input.Joystick;
-import com.jme3.input.JoystickAxis;
-import com.jme3.input.JoystickButton;
-import com.jme3.input.KeyInput;
-import com.jme3.input.MouseInput;
-import com.jme3.input.controls.ActionListener;
-import com.jme3.input.controls.AnalogListener;
-import com.jme3.input.controls.JoyAxisTrigger;
-import com.jme3.input.controls.KeyTrigger;
-import com.jme3.input.controls.MouseAxisTrigger;
-import com.epicest.reusables.entity.GameCharacterControl;
-import com.jme3.input.JoyInput;
-import com.jme3.input.controls.JoyButtonTrigger;
-import com.jme3.input.controls.MouseButtonTrigger;
-import java.util.ArrayList;
-import java.util.List;
+import com.epicest.reusables.*;
+import com.epicest.reusables.interactable.*;
+import com.jme3.app.*;
+import com.jme3.app.state.*;
+import com.jme3.input.*;
+import com.epicest.reusables.entity.*;
+import com.jme3.input.controls.*;
 
 /**
  * Application state to player input.
