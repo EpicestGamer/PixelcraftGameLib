@@ -4,19 +4,17 @@
  */
 package com.epicest.reusables;
 
-import com.epicest.reusables.interactable.InteractablesAppState;
-import com.epicest.reusables.entity.player.CharacterInputAppState;
-import com.epicest.reusables.entity.GameCharacterControl;
-import com.epicest.reusables.scripting.ScriptAppState;
-import com.jme3.app.FlyCamAppState;
-import com.jme3.app.SimpleApplication;
-import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.collision.shapes.CollisionShape;
-import com.jme3.bullet.control.RigidBodyControl;
-import com.jme3.bullet.util.CollisionShapeFactory;
-import com.jme3.math.Vector3f;
-import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
+import com.epicest.reusables.interactable.*;
+import com.epicest.reusables.entity.player.*;
+import com.epicest.reusables.entity.*;
+import com.epicest.reusables.scripting.*;
+import com.jme3.app.*;
+import com.jme3.bullet.*;
+import com.jme3.bullet.collision.shapes.*;
+import com.jme3.bullet.control.*;
+import com.jme3.bullet.util.*;
+import com.jme3.math.*;
+import com.jme3.scene.*;
 
 /**
  *

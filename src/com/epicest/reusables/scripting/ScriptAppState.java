@@ -4,15 +4,11 @@
  */
 package com.epicest.reusables.scripting;
 
-import com.epicest.reusables.PixelApplication;
-import com.jme3.app.Application;
-import com.jme3.app.state.AbstractAppState;
-import com.jme3.app.state.AppStateManager;
-import com.jme3.asset.AssetManager;
-import com.jme3.scene.Node;
-import java.util.ArrayList;
-import java.util.HashMap;
-import org.bushe.swing.event.Logger;
+import com.epicest.reusables.*;
+import com.jme3.app.*;
+import com.jme3.app.state.*;
+import java.util.*;
+import org.bushe.swing.event.*;
 
 /**
  * Application state to service scripts (.esf epicest script file).

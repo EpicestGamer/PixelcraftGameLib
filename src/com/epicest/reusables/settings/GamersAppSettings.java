@@ -4,7 +4,7 @@
  */
 package com.epicest.reusables.settings;
 
-import com.jme3.system.AppSettings;
+import com.jme3.system.*;
 
 /**
  * Default settings for a PixelApplication.
