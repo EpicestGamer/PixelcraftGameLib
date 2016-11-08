@@ -100,7 +100,7 @@ public class ScriptAppState extends AbstractAppState {
     public void run(String command, Runner runner) {
         int i = 0;
         int commandMark = -1;
-        String fillin = new String();
+        HashMap<String, String> commandData = new HashMap();
         if (command.toLowerCase().equals("endif")) {
             if_ = false;
         } else if (!if_) {
@@ -130,16 +130,29 @@ public class ScriptAppState extends AbstractAppState {
                             break;
                     }
                 } else {
+                    if (subCommand.startsWith("variable-")) {
+                        String[] variable = subCommand.split("-");
+                        subCommand = variables.get(variable[1]);
+                    }
                     switch (commandMark) {
                         case 0:
                             if (i == 1) {
-                                fillin = subCommand;
+                                commandData.put("variable-name", subCommand);
                             } else {
-                                variables.put(fillin, subCommand);
+                                variables.put(commandData.get("variable-name"), subCommand);
                             }
                             break;
                         case 1:
-                            if_ = true;
+                            if (i == 1) {
+                                commandData.put("if-1", subCommand);
+                            } else if (i == 2) {
+                                commandData.put("if-Operator", subCommand);
+                            } else {
+                                commandData.put("if-2", subCommand);
+                                String if1 = commandData.get("if-1");
+                                String if2 = commandData.get("if-2");
+                                String operator = commandData.get("if-Operator");
+                            }
                             //commandMark == ScriptCommands.If.ordinal();
                             break;
                         case 2:
@@ -152,14 +165,12 @@ public class ScriptAppState extends AbstractAppState {
                             app.loadScene(subCommand);
                             break;
                         case 5:
-                            //commandMark == ScriptCommands.PlayerGoTo.ordinal();
                             app.getRootNode().getChild(subCommand);
                             break;
                         case 6:
                             app.getRootNode().detachChild(app.getRootNode().getChild(subCommand));
                             break;
                     }
-
                 }
                 i++;
             }
