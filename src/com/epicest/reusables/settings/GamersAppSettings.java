@@ -5,6 +5,7 @@
 package com.epicest.reusables.settings;
 
 import com.jme3.system.*;
+import java.util.prefs.BackingStoreException;
 
 /**
  * Default settings for a PixelApplication.
@@ -13,11 +14,10 @@ import com.jme3.system.*;
  */
 public class GamersAppSettings {
 
-    /**
-     * Default settings for a PixelApplication.
-     */
-    public static AppSettings appSettings() {
-        AppSettings as = new AppSettings(true);
+    protected static AppSettings as;
+
+    static {
+        as = new AppSettings(true);
         //Video
         as.setResolution(720, 480);
         //as.setSamples(4);
@@ -26,6 +26,20 @@ public class GamersAppSettings {
         as.setUseJoysticks(true);
         //Branding
         as.setTitle("A Game");
+    }
+
+    /**
+     * Default settings for a PixelApplication.
+     */
+    public static AppSettings appSettings() {
         return as;
+    }
+
+    public static void load(String app) throws BackingStoreException {
+        as.load(app);
+    }
+
+    public static void save(String app) throws BackingStoreException {
+        as.save(app);
     }
 }

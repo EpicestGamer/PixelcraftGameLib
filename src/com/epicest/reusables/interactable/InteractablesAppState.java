@@ -26,10 +26,6 @@ public class InteractablesAppState extends AbstractAppState {
      * Application this appstate services.
      */
     private PixelApplication app;
-    /**
-     * ScriptAppState this appstate utilizes.
-     */
-    private ScriptAppState scripter;
 
     /**
      * Initialises the application state.
@@ -41,23 +37,6 @@ public class InteractablesAppState extends AbstractAppState {
         super.initialize(stateManager, app);
         this.app = (PixelApplication) app;
 
-    }
-
-    /**
-     * Sets a scripter.
-     *
-     */
-    public void setScriptAS() {
-        scripter = app.getStateManager().getState(ScriptAppState.class);
-    }
-
-    /**
-     * Sets a scripter.
-     *
-     * @param scriptAS is used to set the scripter.
-     */
-    public void setScriptAS(ScriptAppState scriptAS) {
-        scripter = scriptAS;
     }
 
     /**
@@ -91,7 +70,7 @@ public class InteractablesAppState extends AbstractAppState {
             }
 
         } catch (Exception e) {
-            Logger.getLogger("").log(Level.WARNING, "An Exception Ocuured While Interacting, It was probably a NPE\n"
+            Logger.getLogger("").log(Level.WARNING, "An Exception Occured While Interacting, It was probably a NPE\n"
                     + "Debugging Info:\n"
                     + "StackTrace: " + e.getStackTrace());
         }

@@ -185,7 +185,6 @@ public abstract class PixelApplication extends SimpleApplication {
     private void scriptingInit() {
         scriptAS = new ScriptAppState();
         stateManager.attach(scriptAS);
-        interactAS.setScriptAS(scriptAS);
         //Initialize any scripts applicable in the scene
     }
 
