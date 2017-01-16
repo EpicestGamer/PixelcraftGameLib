@@ -27,6 +27,6 @@ public class OnDoor extends Script {
      */
     @Override
     public void runTick(ScriptAppState scriptAS, float tpf, Runner in) {
-        scriptAS.run("loadmap~" + in.getObject().getUserData("toPlace"), in);
+        scriptAS.run("loadmap~" + in.getObject().getUserData("toPlace") + "~" + in.getObject().getUserData("spawnPoint"), in);
     }
 }

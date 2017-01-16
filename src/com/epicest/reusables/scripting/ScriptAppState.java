@@ -203,13 +203,19 @@ public class ScriptAppState extends AbstractAppState {
                             app.player.addItem(subCommand);
                             break;
                         case 4:
-                            app.loadScene(subCommand);
+                            if (i == 1) {
+                                variables.put("commandLoadMapWorld", subCommand);
+                            } else if (i == 2) {
+                                app.loadScene(variables.get("commandLoadMapWorld"), subCommand);
+                            }
                             break;
                         case 5:
                             app.getRootNode().getChild(subCommand);
                             break;
                         case 6:
+
                             app.getRootNode().detachChild(app.getRootNode().getChild(subCommand));
+
                             break;
                     }
                 }
