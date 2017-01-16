@@ -54,7 +54,7 @@ public class InteractablesAppState extends AbstractAppState {
                 if (results.size() >= 1) {
                     float dist = results.getCollision(0).getDistance();
                     Geometry geom = results.getCollision(0).getGeometry();
-                    if (dist <= 5) {
+                    if (dist <= 20) {
                         Runner runner = new Runner();
                         runner.setObject(geom);
                         if (((String) geom.getUserData("onInteract")).equals("onDoor")) {

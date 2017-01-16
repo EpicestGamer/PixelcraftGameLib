@@ -13,8 +13,10 @@ import com.jme3.bullet.*;
 import com.jme3.bullet.collision.shapes.*;
 import com.jme3.bullet.control.*;
 import com.jme3.bullet.util.*;
+import com.jme3.light.DirectionalLight;
 import com.jme3.math.*;
 import com.jme3.scene.*;
+import com.jme3.shadow.DirectionalLightShadowRenderer;
 
 /**
  *
@@ -79,6 +81,10 @@ public abstract class PixelApplication extends SimpleApplication {
      */
     protected String load = "";
     /**
+     * Loading Queue Spawnpoint.
+     */
+    protected String spawn = "Spawn";
+    /**
      * states whether or not the game is in a world.
      */
     protected boolean isInWorld = false;
@@ -91,7 +97,7 @@ public abstract class PixelApplication extends SimpleApplication {
         curScene = newScene;
         rootNode.detachAllChildren();
         viewPort.clearProcessors();
-        //init other stuff
+        //init scene
         assetsInit();
         displayInit();
         physicsInit();
@@ -115,15 +121,15 @@ public abstract class PixelApplication extends SimpleApplication {
     protected void displayInit() {
         //Display
         rootNode.attachChild(curScene);
-        /* Drop shadows 
-         DirectionalLight sun = new DirectionalLight();
-         sun.setDirection(new Vector3f(-0.57735026f, -0.57735026f, -0.57735026f));
-         //[1.0, 0.9, 0.7, 1.0]
-         final int SHADOWMAP_SIZE=1024;
-         DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(assetManager, SHADOWMAP_SIZE, 3);
-         dlsr.setLight(sun); //<==assuming a directional light
-         viewPort.addProcessor(dlsr);
-         //Post Processor Filters */
+        // Drop shadows 
+        DirectionalLight sun = new DirectionalLight();
+        sun.setDirection(new Vector3f(-0.5f, -0.5f, -0.5f));
+        //[1.0, 0.9, 0.7, 1.0]
+        final int SHADOWMAP_SIZE = 1024;
+        DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(assetManager, SHADOWMAP_SIZE, 3);
+        dlsr.setLight(sun); //<==assuming a directional light
+        //viewPort.addProcessor(dlsr);
+        //Post Processor Filters */
         viewPort.addProcessor(assetManager.loadFilter("Shaders/Default.j3f"));
     }
 
@@ -144,7 +150,7 @@ public abstract class PixelApplication extends SimpleApplication {
         curScene.addControl(landscape);
         bulletAS.getPhysicsSpace().add(landscape);
         //Player
-        playerInit("Spawn");
+        playerInit(spawn);
         //TODO: Invisible Walls
     }
 
@@ -198,9 +204,9 @@ public abstract class PixelApplication extends SimpleApplication {
      *
      * @param scene argument to later be used in sceneInit().
      */
-    public void loadScene(String scene) {
-        onLoadStart();
+    public void loadScene(String scene, String spawnpoint) {
         load = scene;
+        spawn = spawnpoint;
         loadState = LOAD_QUEUED;
     }
 

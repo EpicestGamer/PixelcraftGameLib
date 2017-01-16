@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.epicest.reusables.entity.npc.dialogue;
+package com.epicest.reusables.dialogue;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioNode;
@@ -10,6 +10,7 @@ import com.jme3.scene.Node;
 import java.util.*;
 
 /**
+ * A dialogue line in a conversation, having children for player choices
  *
  * @author EpicestGamer
  */
@@ -29,7 +30,6 @@ public class DialogueNode {
     protected String audio = null;
     /**
      * Parents of this node
-     *
      */
     protected ArrayList<DialogueNode> parents = new ArrayList();
     /**
@@ -41,7 +41,6 @@ public class DialogueNode {
      * Initializes DialogueNode
      */
     public DialogueNode() {
-        super();
     }
 
     public ArrayList<DialogueNode> getChildren() {
@@ -65,9 +64,17 @@ public class DialogueNode {
         characterIn = subtitle;
     }
 
+    public String getIn() {
+        return characterIn;
+    }
+
     public void setOut(String subtitle, String audio) {
         characterOut = subtitle;
         this.audio = audio;
+    }
+
+    public String getOut() {
+        return characterOut;
     }
 
     public AudioNode playAudio(AssetManager assets, Node rootNode) {
