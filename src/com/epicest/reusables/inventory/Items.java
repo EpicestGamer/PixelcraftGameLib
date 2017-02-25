@@ -9,15 +9,15 @@ package com.epicest.reusables.inventory;
  *
  * @author EpicestGamer
  */
-public abstract class Items {
+public interface Items {
 
-    /**
-     * @param code the identification of an Item.
-     */
-    public abstract String getItemName(String code);
+ /**
+  * @param code the identification of an Item.
+  */
+ public abstract String getItemName(String code);
 
-    /**
-     * @param code the identification of an Item.
-     */
-    public abstract int getItemWeight(String code);
+ /**
+  * @param code the identification of an Item.
+  */
+ public abstract int getItemWeight(String code);
 }

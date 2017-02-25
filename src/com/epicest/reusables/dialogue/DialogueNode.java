@@ -16,73 +16,90 @@ import java.util.*;
  */
 public class DialogueNode {
 
-    /**
-     * The input from the player
-     */
-    protected String characterIn = "THIS DIALOGUE SHOULD NOT BE SEEN";
-    /**
-     * The output the npc says
-     */
-    protected String characterOut = "THIS DIALOGUE SHOULD NOT BE SEEN";
-    /**
-     * The audio file played
-     */
-    protected String audio = null;
-    /**
-     * Parents of this node
-     */
-    protected ArrayList<DialogueNode> parents = new ArrayList();
-    /**
-     * Children of this node
-     */
-    protected ArrayList<DialogueNode> children = new ArrayList();
+ /**
+  * The input from the player
+  */
+ protected String characterIn = "THIS DIALOGUE SHOULD NOT BE SEEN";
+ /**
+  * The output the npc says
+  */
+ protected String characterOut = "THIS DIALOGUE SHOULD NOT BE SEEN";
+ /**
+  * The audio file played
+  */
+ protected String audio = null;
+ /**
+  * Parents of this node
+  */
+ protected ArrayList<DialogueNode> parents = new ArrayList();
+ /**
+  * Children of this node
+  */
+ protected ArrayList<DialogueNode> children = new ArrayList();
+ /**
+  * The Event Listener
+  */
+ protected DialogueSoundPlayEventListener del = null;
 
-    /**
-     * Initializes DialogueNode
-     */
-    public DialogueNode() {
-    }
+ /**
+  * Initializes DialogueNode
+  */
+ public DialogueNode() {
+ }
 
-    public ArrayList<DialogueNode> getChildren() {
-        return children;
-    }
+ public DialogueNode(String in, String out, String audio) {
+  characterIn = in;
+  characterOut = out;
+  this.audio = audio;
+ }
 
-    public ArrayList<DialogueNode> getParents() {
-        return parents;
-    }
+ public ArrayList<DialogueNode> getChildren() {
+  return children;
+ }
 
-    public void addChild(DialogueNode child) {
-        children.add(child);
-        child.addParent(this);
-    }
+ public ArrayList<DialogueNode> getParents() {
+  return parents;
+ }
 
-    void addParent(DialogueNode parent) {
-        parents.add(parent);
-    }
+ public void addChild(DialogueNode child) {
+  children.add(child);
+  child.addParent(this);
+ }
 
-    public void setIn(String subtitle) {
-        characterIn = subtitle;
-    }
+ void addParent(DialogueNode parent) {
+  parents.add(parent);
+ }
 
-    public String getIn() {
-        return characterIn;
-    }
+ public void setDialogueSoundPlayEventListener(DialogueSoundPlayEventListener dspel) {
+  del = dspel;
+ }
 
-    public void setOut(String subtitle, String audio) {
-        characterOut = subtitle;
-        this.audio = audio;
-    }
+ public void setIn(String subtitle) {
+  characterIn = subtitle;
+ }
 
-    public String getOut() {
-        return characterOut;
-    }
+ public String getIn() {
+  return characterIn;
+ }
 
-    public AudioNode playAudio(AssetManager assets, Node rootNode) {
-        AudioNode audio = new AudioNode(assets, this.audio);
-        audio.setLooping(false);
-        audio.setPositional(false);
-        rootNode.attachChild(audio);
-        audio.play();
-        return audio;
-    }
+ public void setOut(String subtitle, String audio) {
+  characterOut = subtitle;
+  this.audio = audio;
+ }
+
+ public String getOut() {
+  return characterOut;
+ }
+
+ public AudioNode playAudio(AssetManager assets, Node rootNode) {
+  AudioNode audio = new AudioNode(assets, this.audio);
+  audio.setLooping(false);
+  audio.setPositional(false);
+  rootNode.attachChild(audio);
+  audio.play();
+  if (del != null) {
+   del.onSoundPlay(new DialogueSoundPlayEvent(rootNode, this));
+  }
+  return audio;
+ }
 }
