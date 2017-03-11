@@ -14,20 +14,27 @@ import com.epicest.reusables.scripting.*;
  */
 public class OnItem extends Script {
 
-    /**
-     * Does nothing in preset scripts.
-     */
-    @Override
-    public void setScript(String path) {
-        //do nothing
-    }
+ /**
+  * Does nothing in preset scripts.
+  */
+ @Override
+ public void setScript(String path) {
+  //do nothing
+ }
 
-    /**
-     * Runs code for 1.Adding an item 2.Updating players Inventory 3.Deletes
-     * Item.
-     */
-    public void runTick(ScriptAppState scriptAS, float tpf, Runner in) {
-        scriptAS.run("additem~" + in.getObject().getUserData(""), in);
-        scriptAS.run("dispose~" + in.getObject().getName(), in);
-    }
+ /**
+  * Runs code for 1.Adding an item 2.Updating players Inventory 3.Deletes Item.
+  */
+ public String getString(Runner in) {
+  return "Java.type('com.epicest.reusables.PixelApplication')"
+          + ".currentApplication"
+          + ".player"
+          + ".addItem("
+          + "'" + in.getObject().getUserData("itemID") + "');\n"
+          + "Java.type('com.epicest.reusables.PixelApplication')"
+          + ".currentApplication"
+          + ".getRootNode()"
+          + ".detachChildNamed('" + in.getObject().getName() + "');";
+//additem~" + in.getObject().getUserData("itemID") + "dispose~" + in.getObject().getName();
+ }
 }

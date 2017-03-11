@@ -14,19 +14,24 @@ import com.epicest.reusables.scripting.*;
  */
 public class OnDoor extends Script {
 
-    /**
-     * Does nothing in preset scripts.
-     */
-    @Override
-    public void setScript(String path) {
-        //do nothing
-    }
+ /**
+  * Does nothing in preset scripts.
+  */
+ @Override
+ public void setScript(String path) {
+  //do nothing
+ }
 
-    /**
-     * Runs code for 1.loading a new scene.
-     */
-    @Override
-    public void runTick(ScriptAppState scriptAS, float tpf, Runner in) {
-        scriptAS.run("loadmap~" + in.getObject().getUserData("toPlace") + "~" + in.getObject().getUserData("spawnPoint"), in);
-    }
+ /**
+  * Runs code for 1.loading a new scene.
+  */
+ @Override
+ public String getString(Runner in) {
+  return "Java.type('com.epicest.reusables.PixelApplication')"
+          + ".currentApplication"
+          + ".loadScene("
+          + "'" + in.getObject().getUserData("toPlace") + "',"
+          + " '" + in.getObject().getUserData("spawnPoint") + "');";
+  //"loadmap~" + in.getObject().getUserData("toPlace") + "~" + in.getObject().getUserData("spawnPoint");
+ }
 }

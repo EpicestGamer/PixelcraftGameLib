@@ -16,53 +16,57 @@ import de.lessvoid.nifty.screen.*;
  */
 public abstract class NiftyController implements ScreenController {
 
-    /**
-     * The nifty this services.
-     */
-    protected Nifty nifty;
-    /**
-     * The screen this services.
-     */
-    protected Screen screen;
-    /**
-     * The app this services.
-     */
-    protected static PixelApplication app;
+ /**
+  * The nifty this services.
+  */
+ protected Nifty nifty;
+ /**
+  * The screen this services.
+  */
+ protected Screen screen;
+ /**
+  * The app this services.
+  */
+ protected static PixelApplication app;
 
-    /**
-     * Initializes the controller (I think).
-     */
-    @Override
-    public void bind(Nifty nifty, Screen screen) {
-        this.nifty = nifty;
-        this.screen = screen;
-    }
+ /**
+  * Initializes the controller (I think).
+  */
+ @Override
+ public void bind(Nifty nifty, Screen screen) {
+  this.nifty = nifty;
+  this.screen = screen;
+ }
 
-    /**
-     * Does nothing.
-     */
-    @Override
-    public void onStartScreen() {
-    }
+ /**
+  * Does nothing.
+  */
+ @Override
+ public void onStartScreen() {
+ }
 
-    /**
-     * Does nothing.
-     */
-    @Override
-    public void onEndScreen() {
-    }
+ /**
+  * Does nothing.
+  */
+ @Override
+ public void onEndScreen() {
+ }
 
-    /**
-     * Sets an app.
-     */
-    public static void setApplication(PixelApplication app) {
-        NiftyController.app = app;
-    }
+ /**
+  * Sets an app.
+  */
+ public static void setApplication(PixelApplication app) {
+  NiftyController.app = app;
+ }
 
-    /**
-     * Quits the application.
-     */
-    public void quit() {
-        app.stop();
-    }
+ /**
+  * Quits the application.
+  */
+ public void quit() {
+  app.stop();
+ }
+
+ public String getVersion() {
+  return app.getVersion();
+ }
 }

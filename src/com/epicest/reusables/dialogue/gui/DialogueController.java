@@ -8,7 +8,7 @@ import com.epicest.reusables.dialogue.DialogueNode;
 import com.epicest.reusables.dialogue.DialogueTree;
 import com.epicest.reusables.gui.NiftyController;
 import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.controls.Button;
+import de.lessvoid.nifty.controls.Label;
 import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.screen.Screen;
@@ -20,50 +20,56 @@ import de.lessvoid.nifty.screen.Screen;
  */
 public class DialogueController extends NiftyController {
 
-    /**
-     * Conversation structure
-     */
-    protected static DialogueTree currentDialogue = null;
+ /**
+  * Conversation structure
+  */
+ protected static DialogueTree currentDialogue = null;
 
-    @Override
-    public void bind(Nifty nifty, Screen screen) {
-        super.bind(nifty, screen);
-        if (currentDialogue != null) {
-            refreshButtons();
-        }
-    }
+ @Override
+ public void bind(Nifty nifty, Screen screen) {
+  super.bind(nifty, screen);
+  if (currentDialogue != null) {
+   refreshElements();
+  }
+ }
 
-    /**
-     * Set's the conversation structure
-     */
-    public static void setDialogueTree(DialogueTree dialogue) {
-        currentDialogue = dialogue;
-    }
+ /**
+  * Set's the conversation structure
+  *
+  * @param dialogue the new Dialogue Structure
+  */
+ public static void setDialogueTree(DialogueTree dialogue) {
+  currentDialogue = dialogue;
+ }
 
-    protected void refreshButtons() {
-        Element element = screen.findElementByName("choices");
-        for (Element e : element.getElements()) {
-            e.hide();
-        }
-        for (int i = 0; i < currentDialogue.getCurrent().getChildren().toArray().length; i++) {
-            final int index = i;
-            new ButtonBuilder("dialogueChoice" + i, currentDialogue.getCurrent().getChildren().get(i).getIn()) {
-                {
-                    alignCenter();
-                    height("20px");
-                    width("96%");
-                    visibleToMouse(true);
-                    interactOnClick("runButton(" + index + ")");
-                }
-            }.build(nifty, screen, element);
-        }
+ /**
+  * Refreshes buttons across the dialogue choices
+  */
+ protected void refreshElements() {
+  Element choicesPanel = screen.findElementById("choices");
+  for (Element e : choicesPanel.getChildren()) {
+   e.markForRemoval();
+  }
+  for (int i = 0; i < currentDialogue.getCurrent().getChildren().toArray().length; i++) {
+   final int index = i;
+   new ButtonBuilder("dialogueChoice" + i, currentDialogue.getCurrent().getChildren().get(i).getIn()) {
+    {
+     style("nifty-dialogue-button");
+     interactOnClick("runButton(" + index + ")");
     }
+   }.build(nifty, screen, choicesPanel);
+  }
+  Label subtitleLabel = screen.findNiftyControl("subtitle", Label.class);
+  if (subtitleLabel != null) {
+   subtitleLabel.setText(currentDialogue.getCurrent().getOut());
+  }
+ }
 
-    public void runButton(String index) {
-        int indexChoice = Integer.parseInt(index);
-        DialogueNode choice = currentDialogue.getCurrent().getChildren().get(indexChoice);
-        choice.playAudio(app.getAssetManager(), app.getRootNode());
-        currentDialogue.setCurrent(choice);
-        refreshButtons();
-    }
+ public void runButton(String index) {
+  int indexChoice = Integer.parseInt(index);
+  DialogueNode choice = currentDialogue.getCurrent().getChildren().get(indexChoice);
+  choice.playAudio(app.getAssetManager(), app.getRootNode());
+  currentDialogue.setCurrent(choice);
+  refreshElements();
+ }
 }

@@ -1,117 +1,710 @@
-
 /*
- * To change this template, choose Tools | Templates
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package com.epicest.reusables.launcher;
 
-import com.epicest.reusables.launcher.action.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.*;
-import java.io.*;
+import com.epicest.reusables.PixelApplication;
+import com.jme3.system.AppSettings;
+import java.awt.Desktop;
+import java.awt.DisplayMode;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Image;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
-import javax.imageio.*;
-import javax.swing.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.prefs.BackingStoreException;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JPanel;
+import javax.swing.ListModel;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
- * A gui Launcher, designed to be like Bethesda's game launcher
  *
- * @author EpicestGamer
+ * @author mjspr
  */
-public class Launcher extends JFrame {
-    
-    LauncherPanel panel;
-    
-    public Launcher() {
-        super("Pixelcraft Game Launcher");
-        setUndecorated(true);
-        setSize(800, 400);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-        setResizable(false);
-        panel = new LauncherPanel();
-        panel.imageFile = "Textures/2D/Interface/Launcher/Background.png";//D:\Documents\JMEP\FalloutJayar\assets\Textures\2D\Interface\Launcher\Background.png
-        add(panel);
-        setVisible(true);
-    }
-    
-    public void setImage(String image) {
-    }
-    
-    public void addButton(String image, String highlight, ButtonAction action) {
-        panel.addButton(image, highlight, action);
-    }
-    
-    public void setButtonDimensions(int x, int y) {
-    }
-    
-    protected void drawButtons() {
-    }
-}
+public class Launcher extends javax.swing.JFrame {
 
-class LauncherPanel extends JPanel implements Runnable, MouseListener {
-    
-    public String imageFile;
-    public ArrayList<String> buttons = new ArrayList();
-    public ArrayList<String> highlightButtons = new ArrayList();
-    public ArrayList<ButtonAction> buttonActions = new ArrayList();
-    public int buttonX = 600;
-    public boolean running = true;
-    
-    public LauncherPanel() {
-    }
-    
-    public void addButton(String image, String highlight, ButtonAction action) {
-    }
-    
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.setColor(Color.black);
-        g.fillRect(0, 0, getWidth(), getHeight());
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(new File("assets/" + imageFile));
-            g.drawImage(img, 0, 0, this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    @Override
-    public void mousePressed(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    @Override
-    public void mouseEntered(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    @Override
-    public void mouseExited(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    @Override
-    public void run() {
-        while (running) {
-            repaint();
-            try {
-                Thread.sleep(20);
-            } catch (Exception e) {
-            }
-        }
-    }
+ protected PixelApplication app;
+
+ protected AppSettings settings;
+
+ protected String preferencesKey;
+
+ protected ArrayList<String> mods = new ArrayList<String>();
+
+ /**
+  * Creates new form Launcher
+  */
+ public Launcher(PixelApplication app, AppSettings options, String preferencesKey) {
+  initComponents();
+  Image icon = new ImageIcon(getClass().getResource("Icon.png")).getImage();
+  setIconImage(icon);
+  modHelpFrame.setIconImage(icon);
+  this.app = app;
+  settings = options;
+  this.preferencesKey = preferencesKey;
+  loadSettings();
+ }
+
+ public void setApplication(PixelApplication app) {
+  this.app = app;
+ }
+
+ public static DisplayMode[] getOptionsModes() {
+  GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+  return device.getDisplayModes();
+ }
+
+ public static ComboBoxModel getOptionsResolutions() {
+  DisplayMode[] displayModes = getOptionsModes();
+  ArrayList<String> resolutions = new ArrayList<String>();
+  for (DisplayMode mode : displayModes) {
+   String resolution = mode.getWidth() + "x" + mode.getHeight();
+   if (!resolutions.contains(resolution)) {
+    resolutions.add(resolution);
+   }
+  }
+  DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>();
+  for (String resolution : resolutions) {
+   model.addElement(resolution);
+  }
+  return model;
+ }
+
+ /**
+  * This method is called from within the constructor to initialize the form.
+  * WARNING: Do NOT modify this code. The content of this method is always
+  * regenerated by the Form Editor.
+  */
+ @SuppressWarnings("unchecked")
+ // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+ private void initComponents() {
+
+  bppRadioGroup = new javax.swing.ButtonGroup();
+  modChooser = new javax.swing.JFileChooser();
+  modHelpFrame = new javax.swing.JFrame();
+  versionLabel1 = new javax.swing.JLabel();
+  aboutScrollPane = new javax.swing.JScrollPane();
+  aboutTextArea = new javax.swing.JTextArea();
+  tabbedPane = new javax.swing.JTabbedPane();
+  playPanel = new javax.swing.JPanel();
+  playButton = new javax.swing.JButton();
+  imageLabel = new javax.swing.JLabel();
+  optionsPanel = new javax.swing.JPanel();
+  resolutionPanel = new javax.swing.JPanel();
+  fullscreenCheck = new javax.swing.JCheckBox();
+  resolutionCombo = new javax.swing.JComboBox<>();
+  miscellaniousPanel = new javax.swing.JPanel();
+  gammaBox = new javax.swing.JCheckBox();
+  bpp16Radio = new javax.swing.JRadioButton();
+  bpp24Radio = new javax.swing.JRadioButton();
+  bpp32Radio = new javax.swing.JRadioButton();
+  miscellaneousOptionsPanel = new javax.swing.JPanel();
+  vsyncBox = new javax.swing.JCheckBox();
+  applyButton = new javax.swing.JButton();
+  resetButton = new javax.swing.JButton();
+  modsPanel = new javax.swing.JPanel();
+  addModButton = new javax.swing.JButton();
+  removeModButton = new javax.swing.JButton();
+  helpModsButton = new javax.swing.JButton();
+  modScrollPane = new javax.swing.JScrollPane();
+  modList = new javax.swing.JList<>();
+  applyModsButton = new javax.swing.JButton();
+  resetModsButton = new javax.swing.JButton();
+  aboutPanel = new javax.swing.JPanel();
+  aboutTabs = new javax.swing.JTabbedPane();
+  gamePanel = new javax.swing.JPanel();
+  customPanel = new javax.swing.JPanel();
+  libraryPanel = new javax.swing.JPanel();
+  libraryButton = new javax.swing.JButton();
+  libraryImageLabel = new javax.swing.JLabel();
+
+  bppRadioGroup.add(bpp16Radio);
+  bppRadioGroup.add(bpp24Radio);
+  bppRadioGroup.add(bpp32Radio);
+
+  modChooser.setAcceptAllFileFilterUsed(false);
+  modChooser.setDialogType(javax.swing.JFileChooser.CUSTOM_DIALOG);
+  modChooser.setApproveButtonText("Use Mod");
+  modChooser.setApproveButtonToolTipText("");
+  modChooser.setFileFilter(new FileNameExtensionFilter("Pixelcraft Mod "
+   + "File (JavaScript File (.js))", "js"));
+
+ modHelpFrame.setTitle("Mod Help and Info");
+ modHelpFrame.setAlwaysOnTop(true);
+ modHelpFrame.setSize(new java.awt.Dimension(300, 200));
+
+ versionLabel1.setText(PixelApplication.getVersion());
+ versionLabel1.setToolTipText("Pixelcraft Game Libary version");
+
+ aboutTextArea.setColumns(20);
+ aboutTextArea.setLineWrap(true);
+ aboutTextArea.setRows(5);
+ aboutTextArea.setText("Mods are external scripts to modify your experience in a game, whether they're small texture changes or  new weapons, or complete overhauls.\n\nIt's recommended to keep your mods for each game inside a specific folder to keep organized.\n\nCurrently mods are disabled.");
+ aboutTextArea.setEnabled(false);
+ aboutScrollPane.setViewportView(aboutTextArea);
+
+ javax.swing.GroupLayout modHelpFrameLayout = new javax.swing.GroupLayout(modHelpFrame.getContentPane());
+ modHelpFrame.getContentPane().setLayout(modHelpFrameLayout);
+ modHelpFrameLayout.setHorizontalGroup(
+  modHelpFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+  .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, modHelpFrameLayout.createSequentialGroup()
+   .addContainerGap()
+   .addGroup(modHelpFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+    .addComponent(aboutScrollPane)
+    .addComponent(versionLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE))
+   .addContainerGap())
+ );
+ modHelpFrameLayout.setVerticalGroup(
+  modHelpFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+  .addGroup(modHelpFrameLayout.createSequentialGroup()
+   .addContainerGap()
+   .addComponent(versionLabel1)
+   .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+   .addComponent(aboutScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+   .addContainerGap())
+ );
+
+ setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+ setTitle("Pixelcraft Game Launcher");
+ setResizable(false);
+
+ tabbedPane.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+ playPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+ playPanel.setToolTipText("");
+
+ playButton.setText("Play Game");
+ playButton.addActionListener(new java.awt.event.ActionListener() {
+  public void actionPerformed(java.awt.event.ActionEvent evt) {
+   playButtonActionPerformed(evt);
+  }
+ });
+
+ imageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/epicest/reusables/launcher/Splash.png"))); // NOI18N
+
+ javax.swing.GroupLayout playPanelLayout = new javax.swing.GroupLayout(playPanel);
+ playPanel.setLayout(playPanelLayout);
+ playPanelLayout.setHorizontalGroup(
+  playPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+  .addGroup(playPanelLayout.createSequentialGroup()
+   .addContainerGap()
+   .addGroup(playPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+    .addComponent(imageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, playPanelLayout.createSequentialGroup()
+     .addGap(0, 0, Short.MAX_VALUE)
+     .addComponent(playButton)))
+   .addContainerGap())
+ );
+ playPanelLayout.setVerticalGroup(
+  playPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+  .addGroup(playPanelLayout.createSequentialGroup()
+   .addContainerGap()
+   .addComponent(playButton)
+   .addGap(18, 18, 18)
+   .addComponent(imageLabel)
+   .addContainerGap(17, Short.MAX_VALUE))
+ );
+
+ tabbedPane.addTab("Play", null, playPanel, "");
+
+ optionsPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+ resolutionPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Resolution"));
+
+ fullscreenCheck.setText("Fullscreen?");
+ fullscreenCheck.setToolTipText("Uses the entirety of your screen");
+ fullscreenCheck.setEnabled(false);
+
+ resolutionCombo.setModel(getOptionsResolutions());
+ resolutionCombo.setToolTipText("Changes with and height of the game");
+
+ javax.swing.GroupLayout resolutionPanelLayout = new javax.swing.GroupLayout(resolutionPanel);
+ resolutionPanel.setLayout(resolutionPanelLayout);
+ resolutionPanelLayout.setHorizontalGroup(
+  resolutionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+  .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, resolutionPanelLayout.createSequentialGroup()
+   .addContainerGap()
+   .addComponent(resolutionCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+   .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 108, Short.MAX_VALUE)
+   .addComponent(fullscreenCheck)
+   .addGap(82, 82, 82))
+ );
+ resolutionPanelLayout.setVerticalGroup(
+  resolutionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+  .addGroup(resolutionPanelLayout.createSequentialGroup()
+   .addContainerGap()
+   .addGroup(resolutionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+    .addComponent(fullscreenCheck)
+    .addComponent(resolutionCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+   .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+ );
+
+ fullscreenCheck.getAccessibleContext().setAccessibleDescription("Uses the entirety of your screen, Currently disabled");
+
+ miscellaniousPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Color"));
+
+ gammaBox.setText("Gamma Correction");
+ gammaBox.setToolTipText("Corrects colors");
+
+ bpp16Radio.setToolTipText("16 bits per pixel color depth");
+ bpp16Radio.setLabel("16 BPP Color Depth");
+
+ bpp24Radio.setToolTipText("24 bits per pixel color depth");
+ bpp24Radio.setLabel("24 BPP Color Depth");
+
+ bpp32Radio.setToolTipText("32 bits per pixel color depth");
+ bpp32Radio.setLabel("32 BPP Color Depth");
+
+ javax.swing.GroupLayout miscellaniousPanelLayout = new javax.swing.GroupLayout(miscellaniousPanel);
+ miscellaniousPanel.setLayout(miscellaniousPanelLayout);
+ miscellaniousPanelLayout.setHorizontalGroup(
+  miscellaniousPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+  .addGroup(miscellaniousPanelLayout.createSequentialGroup()
+   .addContainerGap()
+   .addGroup(miscellaniousPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+    .addComponent(gammaBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+    .addComponent(bpp24Radio, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+    .addComponent(bpp32Radio, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+    .addComponent(bpp16Radio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+   .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+ );
+ miscellaniousPanelLayout.setVerticalGroup(
+  miscellaniousPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+  .addGroup(miscellaniousPanelLayout.createSequentialGroup()
+   .addContainerGap()
+   .addComponent(gammaBox)
+   .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+   .addComponent(bpp16Radio)
+   .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+   .addComponent(bpp24Radio)
+   .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+   .addComponent(bpp32Radio)
+   .addContainerGap())
+ );
+
+ miscellaneousOptionsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Miscellaneous"));
+
+ vsyncBox.setText("VSync?");
+ vsyncBox.setToolTipText("Keeps screen tearing from happening");
+
+ javax.swing.GroupLayout miscellaneousOptionsPanelLayout = new javax.swing.GroupLayout(miscellaneousOptionsPanel);
+ miscellaneousOptionsPanel.setLayout(miscellaneousOptionsPanelLayout);
+ miscellaneousOptionsPanelLayout.setHorizontalGroup(
+  miscellaneousOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+  .addGroup(miscellaneousOptionsPanelLayout.createSequentialGroup()
+   .addContainerGap()
+   .addComponent(vsyncBox)
+   .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+ );
+ miscellaneousOptionsPanelLayout.setVerticalGroup(
+  miscellaneousOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+  .addGroup(miscellaneousOptionsPanelLayout.createSequentialGroup()
+   .addContainerGap()
+   .addComponent(vsyncBox)
+   .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+ );
+
+ applyButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/epicest/reusables/launcher/SaveButton.png"))); // NOI18N
+ applyButton.setText("Apply");
+ applyButton.setToolTipText("Saves your options and uses them");
+ applyButton.addActionListener(new java.awt.event.ActionListener() {
+  public void actionPerformed(java.awt.event.ActionEvent evt) {
+   applyButtonActionPerformed(evt);
+  }
+ });
+
+ resetButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/epicest/reusables/launcher/ResetButton.png"))); // NOI18N
+ resetButton.setText("Reset");
+ resetButton.setToolTipText("Loads saved options.");
+ resetButton.addActionListener(new java.awt.event.ActionListener() {
+  public void actionPerformed(java.awt.event.ActionEvent evt) {
+   resetButtonActionPerformed(evt);
+  }
+ });
+
+ javax.swing.GroupLayout optionsPanelLayout = new javax.swing.GroupLayout(optionsPanel);
+ optionsPanel.setLayout(optionsPanelLayout);
+ optionsPanelLayout.setHorizontalGroup(
+  optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+  .addGroup(optionsPanelLayout.createSequentialGroup()
+   .addContainerGap()
+   .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+    .addComponent(resolutionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+    .addGroup(optionsPanelLayout.createSequentialGroup()
+     .addComponent(miscellaniousPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+     .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addComponent(miscellaneousOptionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+      .addGroup(optionsPanelLayout.createSequentialGroup()
+       .addGap(0, 0, Short.MAX_VALUE)
+       .addComponent(resetButton, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+       .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+       .addComponent(applyButton, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+   .addContainerGap())
+ );
+ optionsPanelLayout.setVerticalGroup(
+  optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+  .addGroup(optionsPanelLayout.createSequentialGroup()
+   .addContainerGap()
+   .addComponent(resolutionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+   .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+   .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+    .addComponent(miscellaniousPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, optionsPanelLayout.createSequentialGroup()
+     .addComponent(miscellaneousOptionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+     .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+      .addComponent(applyButton)
+      .addComponent(resetButton))))
+   .addContainerGap(20, Short.MAX_VALUE))
+ );
+
+ tabbedPane.addTab("Game Options", null, optionsPanel, "Change settings for this game");
+
+ modsPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+ addModButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/epicest/reusables/launcher/ModAdd.png"))); // NOI18N
+ addModButton.setToolTipText("Add a mod");
+ addModButton.addActionListener(new java.awt.event.ActionListener() {
+  public void actionPerformed(java.awt.event.ActionEvent evt) {
+   addModButtonActionPerformed(evt);
+  }
+ });
+
+ removeModButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/epicest/reusables/launcher/ModRemove.png"))); // NOI18N
+ removeModButton.setToolTipText("Remove a mod");
+ removeModButton.addActionListener(new java.awt.event.ActionListener() {
+  public void actionPerformed(java.awt.event.ActionEvent evt) {
+   removeModButtonActionPerformed(evt);
+  }
+ });
+
+ helpModsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/epicest/reusables/launcher/ModHelp.png"))); // NOI18N
+ helpModsButton.setToolTipText("Info on mods");
+ helpModsButton.addActionListener(new java.awt.event.ActionListener() {
+  public void actionPerformed(java.awt.event.ActionEvent evt) {
+   helpModsButtonActionPerformed(evt);
+  }
+ });
+
+ modScrollPane.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+ modScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+ modScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+ modList.setModel(getModsListModel());
+ modList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+ modList.setToolTipText("");
+ modScrollPane.setViewportView(modList);
+
+ applyModsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/epicest/reusables/launcher/SaveButton.png"))); // NOI18N
+ applyModsButton.setToolTipText("Save current mod configuration");
+
+ resetModsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/epicest/reusables/launcher/ResetButton.png"))); // NOI18N
+ resetModsButton.setToolTipText("Reset to last mod configuration");
+
+ javax.swing.GroupLayout modsPanelLayout = new javax.swing.GroupLayout(modsPanel);
+ modsPanel.setLayout(modsPanelLayout);
+ modsPanelLayout.setHorizontalGroup(
+  modsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+  .addGroup(modsPanelLayout.createSequentialGroup()
+   .addContainerGap()
+   .addComponent(modScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
+   .addGap(18, 18, 18)
+   .addGroup(modsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+    .addComponent(addModButton, javax.swing.GroupLayout.Alignment.TRAILING)
+    .addComponent(removeModButton, javax.swing.GroupLayout.Alignment.TRAILING)
+    .addComponent(helpModsButton, javax.swing.GroupLayout.Alignment.TRAILING)
+    .addComponent(applyModsButton, javax.swing.GroupLayout.Alignment.TRAILING)
+    .addComponent(resetModsButton, javax.swing.GroupLayout.Alignment.TRAILING))
+   .addContainerGap())
+ );
+ modsPanelLayout.setVerticalGroup(
+  modsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+  .addGroup(modsPanelLayout.createSequentialGroup()
+   .addContainerGap()
+   .addGroup(modsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+    .addGroup(modsPanelLayout.createSequentialGroup()
+     .addComponent(addModButton)
+     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+     .addComponent(removeModButton)
+     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+     .addComponent(resetModsButton)
+     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+     .addComponent(applyModsButton)
+     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+     .addComponent(helpModsButton))
+    .addComponent(modScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE))
+   .addContainerGap())
+ );
+
+ tabbedPane.addTab("Game Modifications", null, modsPanel, "Enable and disable external scripts/mods");
+
+ aboutPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+ gamePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+ javax.swing.GroupLayout customPanelLayout = new javax.swing.GroupLayout(customPanel);
+ customPanel.setLayout(customPanelLayout);
+ customPanelLayout.setHorizontalGroup(
+  customPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+  .addGap(0, 524, Short.MAX_VALUE)
+ );
+ customPanelLayout.setVerticalGroup(
+  customPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+  .addGap(0, 240, Short.MAX_VALUE)
+ );
+
+ javax.swing.GroupLayout gamePanelLayout = new javax.swing.GroupLayout(gamePanel);
+ gamePanel.setLayout(gamePanelLayout);
+ gamePanelLayout.setHorizontalGroup(
+  gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+  .addGroup(gamePanelLayout.createSequentialGroup()
+   .addComponent(customPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+   .addGap(0, 0, Short.MAX_VALUE))
+ );
+ gamePanelLayout.setVerticalGroup(
+  gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+  .addComponent(customPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+ );
+
+ aboutTabs.addTab("Game", gamePanel);
+
+ libraryPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+ libraryButton.setText(PixelApplication.getVersion());
+ libraryButton.setToolTipText("Pixelcraft Game Library Website");
+ libraryButton.addActionListener(new java.awt.event.ActionListener() {
+  public void actionPerformed(java.awt.event.ActionEvent evt) {
+   libraryButtonActionPerformed(evt);
+  }
+ });
+
+ libraryImageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/epicest/reusables/launcher/Splash.png"))); // NOI18N
+
+ javax.swing.GroupLayout libraryPanelLayout = new javax.swing.GroupLayout(libraryPanel);
+ libraryPanel.setLayout(libraryPanelLayout);
+ libraryPanelLayout.setHorizontalGroup(
+  libraryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+  .addGroup(libraryPanelLayout.createSequentialGroup()
+   .addContainerGap()
+   .addGroup(libraryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+    .addComponent(libraryButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, libraryPanelLayout.createSequentialGroup()
+     .addGap(0, 0, Short.MAX_VALUE)
+     .addComponent(libraryImageLabel)))
+   .addContainerGap())
+ );
+ libraryPanelLayout.setVerticalGroup(
+  libraryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+  .addGroup(libraryPanelLayout.createSequentialGroup()
+   .addContainerGap()
+   .addComponent(libraryButton)
+   .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+   .addComponent(libraryImageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 187, Short.MAX_VALUE)
+   .addContainerGap())
+ );
+
+ aboutTabs.addTab("Pixelcraft Game Libary", null, libraryPanel, "This library's news and about");
+
+ javax.swing.GroupLayout aboutPanelLayout = new javax.swing.GroupLayout(aboutPanel);
+ aboutPanel.setLayout(aboutPanelLayout);
+ aboutPanelLayout.setHorizontalGroup(
+  aboutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+  .addComponent(aboutTabs)
+ );
+ aboutPanelLayout.setVerticalGroup(
+  aboutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+  .addComponent(aboutTabs, javax.swing.GroupLayout.Alignment.TRAILING)
+ );
+
+ tabbedPane.addTab("About", null, aboutPanel, "");
+
+ javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+ getContentPane().setLayout(layout);
+ layout.setHorizontalGroup(
+  layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+  .addComponent(tabbedPane)
+ );
+ layout.setVerticalGroup(
+  layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+  .addComponent(tabbedPane)
+ );
+
+ tabbedPane.getAccessibleContext().setAccessibleName("tabs");
+
+ pack();
+ setLocationRelativeTo(null);
+ }// </editor-fold>//GEN-END:initComponents
+
+ private void playButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playButtonActionPerformed
+  app.setSettings(settings);
+  app.setShowSettings(false);
+  app.start();
+  dispose();
+ }//GEN-LAST:event_playButtonActionPerformed
+
+ private void applyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyButtonActionPerformed
+  settings.setWidth(Integer.parseInt(((String) resolutionCombo.getSelectedItem()).split("x")[0]));
+  settings.setHeight(Integer.parseInt(((String) resolutionCombo.getSelectedItem()).split("x")[1]));
+  if (bpp16Radio.isSelected()) {
+   settings.setBitsPerPixel(16);
+  } else if (bpp24Radio.isSelected()) {
+   settings.setBitsPerPixel(24);
+  } else {
+   settings.setBitsPerPixel(32);
+  }
+  settings.setFullscreen(fullscreenCheck.isSelected());
+  settings.setGammaCorrection(gammaBox.isSelected());
+  settings.setVSync(vsyncBox.isSelected());
+  try {
+   settings.save(preferencesKey);
+  } catch (BackingStoreException ex) {
+   Logger.getLogger(Launcher.class.getName()).log(Level.SEVERE, null, ex);
+  }
+ }//GEN-LAST:event_applyButtonActionPerformed
+
+ private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
+  loadSettings();
+ }//GEN-LAST:event_resetButtonActionPerformed
+
+ private void addModButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addModButtonActionPerformed
+  int value = modChooser.showOpenDialog(this);
+  if (value == JFileChooser.APPROVE_OPTION) {
+   java.io.File file = modChooser.getSelectedFile();
+   mods.add(file.getAbsolutePath());
+   modList.setModel(getModsListModel());
+  }
+ }//GEN-LAST:event_addModButtonActionPerformed
+
+ private void helpModsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpModsButtonActionPerformed
+  modHelpFrame.setVisible(true);
+  modHelpFrame.setLocationRelativeTo(this);
+ }//GEN-LAST:event_helpModsButtonActionPerformed
+
+ private void libraryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_libraryButtonActionPerformed
+  if (Desktop.isDesktopSupported()) {
+   try {
+    Desktop.getDesktop().browse(new URI("http://pixelcraftstudios.weebly.com/pcgl.html"));
+   } catch (Exception e) {
+   }
+  }
+ }//GEN-LAST:event_libraryButtonActionPerformed
+
+ private void removeModButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeModButtonActionPerformed
+  for (int i : modList.getSelectedIndices()) {
+   String mod = modList.getModel().getElementAt(i);
+   mods.remove(mod);
+  }
+  modList.setModel(getModsListModel());
+ }//GEN-LAST:event_removeModButtonActionPerformed
+
+ public void setLauncherImage(URL image) {
+  imageLabel.setIcon(new ImageIcon(image));
+  //imageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/epicest/reusables/launcher/Splash.png")));
+ }
+
+ public void addAboutPanel(JPanel panel) {
+  //customContainer.removeAll();
+  customPanel.add(panel);
+ }
+
+ private boolean libraryAboutOn = true;
+
+ public void setLibraryAboutOn(boolean libAboutOn) {
+  if ((libAboutOn) && (!libraryAboutOn)) {
+   aboutTabs.addTab("Pixelcraft Game Libary", null, libraryPanel, "This library's news and about");
+   libraryAboutOn = true;
+  } else if ((!libAboutOn) && (libraryAboutOn)) {
+   aboutTabs.remove(libraryPanel);
+   libraryAboutOn = false;
+  }
+ }
+
+ // Variables declaration - do not modify//GEN-BEGIN:variables
+ private javax.swing.JPanel aboutPanel;
+ private javax.swing.JScrollPane aboutScrollPane;
+ private javax.swing.JTabbedPane aboutTabs;
+ private javax.swing.JTextArea aboutTextArea;
+ private javax.swing.JButton addModButton;
+ private javax.swing.JButton applyButton;
+ private javax.swing.JButton applyModsButton;
+ private javax.swing.JRadioButton bpp16Radio;
+ private javax.swing.JRadioButton bpp24Radio;
+ private javax.swing.JRadioButton bpp32Radio;
+ private javax.swing.ButtonGroup bppRadioGroup;
+ private javax.swing.JPanel customPanel;
+ private javax.swing.JCheckBox fullscreenCheck;
+ private javax.swing.JPanel gamePanel;
+ private javax.swing.JCheckBox gammaBox;
+ private javax.swing.JButton helpModsButton;
+ private javax.swing.JLabel imageLabel;
+ private javax.swing.JButton libraryButton;
+ private javax.swing.JLabel libraryImageLabel;
+ private javax.swing.JPanel libraryPanel;
+ private javax.swing.JPanel miscellaneousOptionsPanel;
+ private javax.swing.JPanel miscellaniousPanel;
+ private javax.swing.JFileChooser modChooser;
+ private javax.swing.JFrame modHelpFrame;
+ private javax.swing.JList<String> modList;
+ private javax.swing.JScrollPane modScrollPane;
+ private javax.swing.JPanel modsPanel;
+ private javax.swing.JPanel optionsPanel;
+ private javax.swing.JButton playButton;
+ private javax.swing.JPanel playPanel;
+ private javax.swing.JButton removeModButton;
+ private javax.swing.JButton resetButton;
+ private javax.swing.JButton resetModsButton;
+ private javax.swing.JComboBox<String> resolutionCombo;
+ private javax.swing.JPanel resolutionPanel;
+ private javax.swing.JTabbedPane tabbedPane;
+ private javax.swing.JLabel versionLabel1;
+ private javax.swing.JCheckBox vsyncBox;
+ // End of variables declaration//GEN-END:variables
+
+ private void loadSettings() {
+  String resolution = settings.getWidth() + "x" + settings.getHeight();
+  for (int i = 0; i < resolutionCombo.getItemCount(); i++) {
+   if (resolutionCombo.getItemAt(i).equals(resolution)) {
+    resolutionCombo.setSelectedIndex(i);
+    break;
+   }
+  }
+  int bpp = settings.getBitsPerPixel();
+  if (bpp == 16) {
+   bpp16Radio.setSelected(true);
+  } else if (bpp == 24) {
+   bpp24Radio.setSelected(true);
+  } else if (bpp == 32) {
+   bpp32Radio.setSelected(true);
+  }
+  fullscreenCheck.setSelected(settings.isFullscreen());
+  gammaBox.setSelected(settings.isGammaCorrection());
+  vsyncBox.setSelected(settings.isVSync());
+ }
+
+ protected String[] getMods() {
+  String[] modsArray = new String[mods.size()];
+  for (int i = 0; i < mods.size(); i++) {
+   modsArray[i] = mods.get(i);
+  }
+  return modsArray;
+ }
+
+ protected ListModel<String> getModsListModel() {
+  DefaultListModel<String> modsModel = new DefaultListModel<String>();
+  for (String mod : getMods()) {
+   modsModel.addElement(mod);
+  }
+  return modsModel;
+ }
 }

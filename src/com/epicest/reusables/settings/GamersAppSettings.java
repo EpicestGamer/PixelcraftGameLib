@@ -4,6 +4,7 @@
  */
 package com.epicest.reusables.settings;
 
+import com.epicest.reusables.PixelApplication;
 import com.jme3.system.*;
 import java.util.prefs.BackingStoreException;
 
@@ -14,32 +15,32 @@ import java.util.prefs.BackingStoreException;
  */
 public class GamersAppSettings {
 
-    protected static AppSettings as;
+ protected static AppSettings as;
 
-    static {
-        as = new AppSettings(true);
-        //Video
-        as.setResolution(720, 480);
-        //as.setSamples(4);
-        as.setFrameRate(60);
-        //Input
-        as.setUseJoysticks(true);
-        //Branding
-        as.setTitle("A Game");
-    }
+ static {
+  as = new AppSettings(true);
+  //Video
+  as.setResolution(720, 480);
+  //as.setSamples(4);
+  as.setFrameRate(60);
+  //Input
+  as.setUseJoysticks(true);
+  //Branding
+  as.setTitle(PixelApplication.class.getSimpleName());
+ }
 
-    /**
-     * Default settings for a PixelApplication.
-     */
-    public static AppSettings appSettings() {
-        return as;
-    }
+ /**
+  * Default settings for a PixelApplication.
+  */
+ public static AppSettings appSettings() {
+  return as;
+ }
 
-    public static void load(String app) throws BackingStoreException {
-        as.load(app);
-    }
+ public static void load(String app) throws BackingStoreException {
+  as.load(app);
+ }
 
-    public static void save(String app) throws BackingStoreException {
-        as.save(app);
-    }
+ public static void save(String app) throws BackingStoreException {
+  as.save(app);
+ }
 }
