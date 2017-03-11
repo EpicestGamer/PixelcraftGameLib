@@ -106,17 +106,13 @@ public abstract class PixelApplication extends SimpleApplication {
   */
  public static PixelApplication currentApplication;
 
- @Override
- public void simpleInitApp() {
+ public PixelApplication() {
   loaderAppState = new AdvancedLoadingAppState(this);
   currentApplication = this;
  }
 
  public void preInitScene() {
   //reset scene
-  /*for(Spatial spat : rootNode.getChildren()){
-
-  }*/
   rootNode.detachAllChildren();
   //viewPort.clearProcessors();
  }
@@ -335,9 +331,9 @@ public abstract class PixelApplication extends SimpleApplication {
   return markedForDialogue;
  }
 
- public String getVersion() {
+ public static String getVersion() {
   return "Pixelcraft Game Library\n"
-          + "alpha 0.1.2";
+          + " Alpha 0.1.2";
  }
 
  @Override

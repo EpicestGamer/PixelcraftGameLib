@@ -53,7 +53,7 @@ public class Runner {
   * Used to set a script.
   */
  public void setScript(String scriptPath) {
-  script.setScript(scriptPath);
+  script.setAssetScript(scriptPath);
  }
 
  /**

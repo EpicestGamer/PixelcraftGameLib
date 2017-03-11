@@ -37,7 +37,7 @@ public class ScriptAppState extends AbstractAppState {
  /**
   * ScriptManager
   */
- protected ScriptEngineManager factory = new ScriptEngineManager();
+ protected ScriptEngineManager seman = new ScriptEngineManager();
  /**
   * ScriptEngine
   */
@@ -46,6 +46,14 @@ public class ScriptAppState extends AbstractAppState {
   * Nifty
   */
  protected Nifty nifty;
+ /**
+  * Static variable meant for "mod" Runners, runs continuously
+  */
+ protected static ArrayList<Runner> staticRunners = new ArrayList();
+ /**
+  * Static variable meant for "mod" Runners, runsw once
+  */
+ protected static ArrayList<Runner> tempStaticRunners = new ArrayList();
 
  /**
   * Initialises the application state.
@@ -56,7 +64,7 @@ public class ScriptAppState extends AbstractAppState {
  public void initialize(AppStateManager stateManager, Application app) {
   super.initialize(stateManager, app);
   this.app = (PixelApplication) app;
-  scripter = factory.getEngineByName("Nashorn");
+  scripter = seman.getEngineByName("Nashorn");
  }
 
  /**
@@ -69,12 +77,31 @@ public class ScriptAppState extends AbstractAppState {
  }
 
  /**
-  * Adds a Runner to run once..
+  * Adds a Runner to run once.
   *
   * @param runner Runner to add.
   */
  public void addTempRunner(Runner runner) {
   tempRunners.add(runner);
+ }
+
+ /**
+  * Adds a static Runner to run continuously.
+  *
+  * @param runner Runner to add.
+  */
+ public static void addStaticRunner(Runner runner) {
+  staticRunners.add(runner);
+ }
+
+ /**
+  * Adds a static Runner to run once.
+  *
+  * @param runner Runner to add.
+  */
+ public static void addStaticTempRunner(Runner runner) {
+  tempStaticRunners.add(runner);
+
  }
 
  /**
@@ -111,7 +138,22 @@ public class ScriptAppState extends AbstractAppState {
     Logger.getLogger(ScriptAppState.class.getName()).log(Level.SEVERE, null, ex);
    }
   }
+  for (Runner runner : tempStaticRunners) {
+   try {
+    run(runner);
+   } catch (ScriptException ex) {
+    Logger.getLogger(ScriptAppState.class.getName()).log(Level.SEVERE, null, ex);
+   }
+  }
+  for (Runner runner : staticRunners) {
+   try {
+    run(runner);
+   } catch (ScriptException ex) {
+    Logger.getLogger(ScriptAppState.class.getName()).log(Level.SEVERE, null, ex);
+   }
+  }
   tempRunners = new ArrayList();
+  tempStaticRunners = new ArrayList();
  }
 
  /**

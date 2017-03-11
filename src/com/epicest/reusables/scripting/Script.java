@@ -20,10 +20,17 @@ public class Script {
  /**
   * Sets a script to run.
   */
+ public void setAssetScript(String path) {
+  setScript("assets/" + path);
+ }
+
+ /**
+  * Sets a script using a absolute path to run.
+  */
  public void setScript(String path) {
   try {
    script = new File(path);
-   FileInputStream in = new FileInputStream("assets/" + script);
+   FileInputStream in = new FileInputStream(script);
    bin = new BufferedInputStream(in);
   } catch (Exception e) {
    Logger.getLogger("").log(Level.WARNING, "Umm" + e.toString());
