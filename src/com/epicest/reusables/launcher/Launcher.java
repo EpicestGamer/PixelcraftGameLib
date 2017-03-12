@@ -6,6 +6,7 @@
 package com.epicest.reusables.launcher;
 
 import com.epicest.reusables.PixelApplication;
+import com.jme3.app.SimpleApplication;
 import com.jme3.system.AppSettings;
 import java.awt.Desktop;
 import java.awt.DisplayMode;
@@ -33,7 +34,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class Launcher extends javax.swing.JFrame {
 
- protected PixelApplication app;
+ protected SimpleApplication app;
 
  protected AppSettings settings;
 
@@ -44,7 +45,7 @@ public class Launcher extends javax.swing.JFrame {
  /**
   * Creates new form Launcher
   */
- public Launcher(PixelApplication app, AppSettings options, String preferencesKey) {
+ public Launcher(SimpleApplication app, AppSettings options, String preferencesKey) {
   initComponents();
   Image icon = new ImageIcon(getClass().getResource("Icon.png")).getImage();
   setIconImage(icon);
