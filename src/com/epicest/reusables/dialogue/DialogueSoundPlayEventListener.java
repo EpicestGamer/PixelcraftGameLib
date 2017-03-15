@@ -5,10 +5,14 @@
 package com.epicest.reusables.dialogue;
 
 /**
+ * A EventListener for when a dialogue sound plays.
  *
- * @author mjspr
+ * @author EpicestGamer
  */
 public interface DialogueSoundPlayEventListener {
 
-    public void onSoundPlay(DialogueSoundPlayEvent e);
+ /**
+  * Runs when the DialogueNode associated plays a sound
+  */
+ public void onSoundPlay(DialogueSoundPlayEvent e);
 }

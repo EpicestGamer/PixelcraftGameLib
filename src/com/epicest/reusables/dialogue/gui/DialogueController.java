@@ -16,7 +16,7 @@ import de.lessvoid.nifty.screen.Screen;
 /**
  * Used for conversations in NiftyGUI
  *
- * @author mjspr
+ * @author EpicestGamer
  */
 public class DialogueController extends NiftyController {
 
@@ -65,6 +65,11 @@ public class DialogueController extends NiftyController {
   }
  }
 
+ /**
+  * Runs the DialogueNode and switches the current node
+  *
+  * @param index the choice
+  */
  public void runButton(String index) {
   int indexChoice = Integer.parseInt(index);
   DialogueNode choice = currentDialogue.getCurrent().getChildren().get(indexChoice);

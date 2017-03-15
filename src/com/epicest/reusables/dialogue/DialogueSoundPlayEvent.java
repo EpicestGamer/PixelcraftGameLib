@@ -7,27 +7,28 @@ package com.epicest.reusables.dialogue;
 import com.jme3.scene.Node;
 
 /**
+ * An Event, for use with DialogueSoundPlayEventListener
  *
- * @author mjspr
+ * @author EpicestGamer
  */
 public class DialogueSoundPlayEvent {
 
- Node applicationRootNode = null;
+ /**
+  * The DialogueNode associated with the event
+  */
  DialogueNode dialogueNode = null;
 
  /**
-  * Initializes Contructor
+  * Creates a DialogueSoundPlayEvent
   */
- public DialogueSoundPlayEvent(Node rootNode, DialogueNode nodeInhibitor) {
-  applicationRootNode = rootNode;
+ public DialogueSoundPlayEvent(DialogueNode nodeInhibitor) {
   dialogueNode = nodeInhibitor;
  }
 
- public Node getAppRootNode() {
-  return applicationRootNode;
- }
-
- public DialogueNode getDialogueNodeInhibitor() {
+ /**
+  * @return the DialogueNode that this event is associated with
+  */
+ public DialogueNode getDialogueNode() {
   return dialogueNode;
  }
 }

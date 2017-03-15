@@ -9,11 +9,19 @@ import com.jme3.scene.Node;
 /**
  * A conversation structure
  *
- * @author mjspr
+ * @author EpicestGamer
  */
 public class DialogueTree {
 
- public static DialogueTree parseWorldNodes(String subCommand, Node parsedNode) {
+ /**
+  * Creates a DialogueTree using existing values in a Node Tree
+  *
+  * @deprecated not finished, and I have no idea how to finish it.
+  * @param parsedNode th Node to be parsed
+  * @return a DialogueTree parsed in nodes
+  */
+ @Deprecated
+ public static DialogueTree parseWorldNodes(Node parsedNode) {
   DialogueNode rootNode = new DialogueNode((String) parsedNode.getUserData("in"), (String) parsedNode.getUserData("out"), (String) parsedNode.getUserData("audio"));
   Node currentNode = (Node) parsedNode.getChildren().get(0);
   int lastCurrentNodeIndex;
@@ -38,6 +46,8 @@ public class DialogueTree {
  protected DialogueNode curNode;
 
  /**
+  * Creates a DialogueTree with a rootNode
+  *
   * @param root the root of the conversation
   */
  public DialogueTree(DialogueNode root) {
@@ -45,6 +55,9 @@ public class DialogueTree {
   curNode = rootNode;
  }
 
+ /**
+  * Creates an empty DialogueTree
+  */
  public DialogueTree() {
  }
 
