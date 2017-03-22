@@ -43,7 +43,7 @@ public class GameCharacterControl extends BetterCharacterControl implements Acti
  /**
   * Traits
   */
- HashMap<String, Integer> traits = new HashMap();
+ HashMap<String, Float> traits = new HashMap();
  /**
   * Inventory
   */
@@ -164,12 +164,12 @@ public class GameCharacterControl extends BetterCharacterControl implements Acti
   setViewDirection(viewDirection);
  }
 
- public void setTrait(int initValue, String key) {
+ public void setTrait(float initValue, String key) {
   traits.put(key, initValue);
  }
 
- public int getTrait(String key) {
-  return (Integer) traits.get(key);
+ public float getTrait(String key) {
+  return traits.get(key);
  }
 
  protected void lookUpDown(float value) {

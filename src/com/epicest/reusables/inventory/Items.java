@@ -5,7 +5,7 @@
 package com.epicest.reusables.inventory;
 
 /**
- * An Item Skeleton
+ * An set of Item objects
  *
  * @author EpicestGamer
  */
@@ -14,10 +14,5 @@ public interface Items {
  /**
   * @param code the identification of an Item.
   */
- public abstract String getItemName(String code);
-
- /**
-  * @param code the identification of an Item.
-  */
- public abstract int getItemWeight(String code);
+ public abstract Item getItem(String code);
 }
