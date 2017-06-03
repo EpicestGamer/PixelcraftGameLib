@@ -51,8 +51,7 @@ public class DialogueTree {
   * @param root the root of the conversation
   */
  public DialogueTree(DialogueNode root) {
-  rootNode = root;
-  curNode = rootNode;
+  setRoot(root);
  }
 
  /**
@@ -80,5 +79,10 @@ public class DialogueTree {
   */
  public void setCurrent(DialogueNode current) {
   curNode = current;
+ }
+
+ public void setRoot(DialogueNode root) {
+  rootNode = root;
+  curNode = root;
  }
 }

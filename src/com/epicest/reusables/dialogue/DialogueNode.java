@@ -40,6 +40,7 @@ public class DialogueNode {
  /**
   * The Event Listener
   */
+ private String spl = "";
  protected DialogueSoundPlayEventListener del = null;
 
  /**
@@ -85,6 +86,11 @@ public class DialogueNode {
   child.addParent(this);
  }
 
+ public void removeChild(DialogueNode child) {
+  children.remove(child);
+  child.removeChild(this);
+ }
+
  /**
   * Adds a parent to this DialogueNode
   *
@@ -92,6 +98,10 @@ public class DialogueNode {
   */
  void addParent(DialogueNode parent) {
   parents.add(parent);
+ }
+
+ void removeParent(DialogueNode parent) {
+  parents.remove(parent);
  }
 
  /**
@@ -123,9 +133,16 @@ public class DialogueNode {
   * @param subtitle the subtitle of the audio for this DialogueNode
   * @param audio the path of the audio for this DialogueNode
   */
- public void setOut(String subtitle, String audio) {
+ public void setOut(String subtitle) {
   characterOut = subtitle;
+ }
+
+ public void setAudio(String audio) {
   this.audio = audio;
+ }
+
+ public String getAudio() {
+  return audio;
  }
 
  /**
@@ -133,6 +150,16 @@ public class DialogueNode {
   */
  public String getOut() {
   return characterOut;
+ }
+
+ @Deprecated
+ public String getSPL() {
+  return spl;
+ }
+
+ @Deprecated
+ public void setSPL(String newspl) {
+  spl = newspl;
  }
 
  /**
