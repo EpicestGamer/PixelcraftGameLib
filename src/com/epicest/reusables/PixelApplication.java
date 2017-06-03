@@ -7,17 +7,17 @@ package com.epicest.reusables;
 import com.epicest.reusables.entity.*;
 import com.epicest.reusables.entity.player.*;
 import com.epicest.reusables.interactable.*;
-import com.epicest.reusables.loading.AdvancedLoadingAppState;
+import com.epicest.reusables.loading.*;
 import com.epicest.reusables.scripting.*;
 import com.jme3.app.*;
+import com.jme3.asset.AssetManager;
 import com.jme3.bullet.*;
-import com.jme3.bullet.control.RigidBodyControl;
-import com.jme3.input.InputManager;
-import com.jme3.light.DirectionalLight;
+import com.jme3.bullet.control.*;
+import com.jme3.input.*;
 import com.jme3.math.*;
+import com.jme3.renderer.ViewPort;
 import com.jme3.scene.*;
-import com.jme3.shadow.DirectionalLightShadowRenderer;
-import java.util.concurrent.Callable;
+import java.util.concurrent.*;
 
 /**
  *
@@ -108,9 +108,45 @@ public abstract class PixelApplication extends SimpleApplication {
 
  public PixelApplication() {
   loaderAppState = new AdvancedLoadingAppState(this);
+
+  scriptAS = new ScriptAppState();
+  stateManager.attach(scriptAS);
+
   currentApplication = this;
  }
 
+ /**
+  * Is used to queue a scene to be loaded in the next update.
+  *
+  * @param scene argument to later be used in sceneInit().
+  */
+ public void loadScene(String scene, String spawnpoint) {
+  load = scene;
+  spawn = spawnpoint;
+  loadState = LOAD_QUEUED;
+ }
+
+ public void openLoad() {
+  try {
+
+   final Spatial scene = assetManager.loadModel(load);
+   this.enqueue(new Callable<Boolean>() {
+    @Override
+    public Boolean call() {
+     preInitScene();
+     initScene(scene);
+     return true;
+    }
+   });
+  } catch (Exception e) {
+   e.printStackTrace();
+   //loaderAppState.markForLoad();
+  }
+ }
+
+ /**
+  * Runs directly before loading a scene
+  */
  public void preInitScene() {
   //reset scene
   rootNode.detachAllChildren();
@@ -123,10 +159,8 @@ public abstract class PixelApplication extends SimpleApplication {
  public void initScene(Spatial newScene) {
   curScene = newScene;
   //init scene
-  assetsInit();
   displayInit();
   physicsInit();
-  scriptingInit();
   otherInit();
   //finish
   //niftyState.gotoScreen("hud");
@@ -136,11 +170,6 @@ public abstract class PixelApplication extends SimpleApplication {
  }
 
  /**
-  * Initializes assets Honestly I'm not even sure I need this.
-  */
- protected abstract void assetsInit();
-
- /**
   * Initializes any graphical needs Such as putting the scene you are loading on
   * the screen, and any filters.
   */
@@ -148,19 +177,10 @@ public abstract class PixelApplication extends SimpleApplication {
   //Display
   rootNode.attachChild(curScene);
 
-  //Post Processor Filters */
+  /*//Post Processor Filters
   if (!sceneInitedOnce) {
-
-   // Drop shadows
-   DirectionalLight sun = new DirectionalLight();
-   sun.setDirection(new Vector3f(-0.5f, -0.5f, -0.5f));
-   //[1.0, 0.9, 0.7, 1.0]
-   final int SHADOWMAP_SIZE = 2048;
-   DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(assetManager, SHADOWMAP_SIZE, 4);
-   dlsr.setLight(sun); //<==assuming a directional light
-   viewPort.addProcessor(dlsr);
    viewPort.addProcessor(assetManager.loadFilter("Shaders/Default.j3f"));
-  }
+  } */
  }
 
  /**
@@ -174,10 +194,6 @@ public abstract class PixelApplication extends SimpleApplication {
   bulletAS.getPhysicsSpace().setGravity(normalGravity);
   inputManager.setCursorVisible(false);
   //SceneCollisions
-  /*CollisionShape sceneShape = CollisionShapeFactory.createMeshShape(curScene);
-  landscape = new RigidBodyControl(sceneShape, 0);
-  curScene.addControl(landscape);
-  bulletAS.getPhysicsSpace().add(landscape);*/
   bulletAS.getPhysicsSpace().addAll(curScene);
   //Player
   playerInit(spawn);
@@ -196,12 +212,10 @@ public abstract class PixelApplication extends SimpleApplication {
   //Player
   Node playerNode = new Node("Player");
   playerNode.setLocalTranslation(rootNode.getChild(spawnNode).getWorldTranslation());
-  //FOJItems itemset = new FOJItems();
   if (player == null) {
    player = new GameCharacterControl(1.1f, 5f, 7f, playerNode.getWorldTranslation());
    player.setGravity(normalGravity);
    player.setCamera(cam);
-   //player.setTrait(113, "a");
   }
   player.setSpatial(playerNode);
   playerNode.addControl(player);
@@ -216,29 +230,9 @@ public abstract class PixelApplication extends SimpleApplication {
  }
 
  /**
-  * Initialises ScriptAppState.
-  */
- private void scriptingInit() {
-  scriptAS = new ScriptAppState();
-  stateManager.attach(scriptAS);
-  //Initialize any scripts applicable in the scene
- }
-
- /**
-  * Anything else needed to initialize during scene loading.
+  * Initializes anything else needed at the end of loading
   */
  protected abstract void otherInit();
-
- /**
-  * Is used to queue a scene to be loaded in the next update.
-  *
-  * @param scene argument to later be used in sceneInit().
-  */
- public void loadScene(String scene, String spawnpoint) {
-  load = scene;
-  spawn = spawnpoint;
-  loadState = LOAD_QUEUED;
- }
 
  /**
   * Simple Update Loop.
@@ -247,18 +241,14 @@ public abstract class PixelApplication extends SimpleApplication {
   */
  @Override
  public void simpleUpdate(float tpf) {
-  //System.out.println(tpf);
   //TODO: add update code
-  //player.update(tpf);
   if (loadState != LOAD_NONE) {
    if (loadState == LOAD_QUEUED) {
     onLoadStart();
     loaderAppState.markForLoad();
-    //openLoad();
     loadState = LOAD_STARTED;
    } else if (loadState == LOAD_STARTED) {
     //Do nothing
-    //loadState = LOAD_NONE;
    } else if (loadState == LOAD_FINISHED) {
     onLoadFinish();
     Node entranceNode = (Node) rootNode.getChild("EnterNode");
@@ -285,57 +275,66 @@ public abstract class PixelApplication extends SimpleApplication {
  protected abstract void onLoadFinish();
 
  /**
-  * @return rootNode.
+  * @return the main asset manager for the application
+  */
+ public AssetManager getAssetManager() {
+  return assetManager;
+ }
+
+ /**
+  * @return the main input manager for the application
+  */
+ public InputManager getInputManager() {
+  return inputManager;
+ }
+
+ /**
+  * @return the root node of the application
   */
  public Node getRootNode() {
   return rootNode;
  }
 
- public InputManager getInputManager() {
-  return inputManager;
- }
-
- public void openLoad() {
-  try {
-   preInitScene();
-   final Spatial scene = assetManager.loadModel(load);
-   this.enqueue(new Callable<Boolean>() {
-    @Override
-    public Boolean call() {
-     initScene(scene);
-     return true;
-    }
-   });
-  } catch (Exception e) {
-   e.printStackTrace();
-   //loaderAppState.markForLoad();
-  }
+ /**
+  * @return the main view port for the application
+  */
+ public ViewPort getViewPort() {
+  return viewPort;
  }
 
  /**
-  * @return isInWorld.
+  * @param mark determines whether or not the application is marked for a
+  * dialogue sequence
   */
- public boolean getIsInWorld() {
-  return isInWorld;
+ public void markForDialogue(boolean mark) {
+  markedForDialogue = mark;
  }
 
- public void markForDialogue() {
-  markedForDialogue = true;
- }
-
- public void unmarkForDialogue() {
-  markedForDialogue = false;
- }
-
+ /**
+  * @return whether or not the application is marked for a dialogue sequence
+  */
  public boolean getMarkedForDialogue() {
   return markedForDialogue;
  }
 
+ /**
+  * @return the current library version
+  */
  public static String getVersion() {
   return "Pixelcraft Game Library\n"
           + " Alpha 0.1.2";
  }
 
+ /**
+  * @return a value based on whether a scene is loaded
+  */
+ public boolean getIsInWorld() {
+  return isInWorld;
+ }
+
+ /**
+  * @inheritDoc
+  */
  @Override
  public void destroy() {
   super.destroy();

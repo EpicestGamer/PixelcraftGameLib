@@ -30,7 +30,7 @@ public abstract class NiftyController implements ScreenController {
  protected static PixelApplication app;
 
  /**
-  * Initializes the controller (I think).
+  * Initializes the controller
   */
  @Override
  public void bind(Nifty nifty, Screen screen) {

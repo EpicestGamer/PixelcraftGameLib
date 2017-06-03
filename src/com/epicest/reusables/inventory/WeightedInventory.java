@@ -71,10 +71,10 @@ public class WeightedInventory {
   */
  public boolean getOverEncumbered() {
   String[] itemCodes = convertToString(inventory.keySet().toArray());
-  int weight = 0;
+  double weight = 0;
   for (int i = 0; i < itemCodes.length; i++) {
    int amount = (Integer) inventory.get(itemCodes[i]);
-   int curItemWeight = itemSet.getItemWeight(itemCodes[i]);
+   double curItemWeight = itemSet.getItem(itemCodes[i]).getWeight();
    weight += (amount * curItemWeight);
   }
   if (weight > maxWeight) {
@@ -109,7 +109,7 @@ public class WeightedInventory {
   int weight = 0;
   for (int i = 0; i < itemCodes.length; i++) {
    int amount = (Integer) inventory.get(itemCodes[i]);
-   int curItemWeight = itemSet.getItemWeight(itemCodes[i]);
+   double curItemWeight = itemSet.getItem(itemCodes[i]).getWeight();
    weight += (amount * curItemWeight);
   }
   return weight;
@@ -125,8 +125,8 @@ public class WeightedInventory {
   String[] itemCodes = convertToString(inventory.keySet().toArray());
   for (int i = 0; i < itemCodes.length; i++) {
    int amount = (Integer) inventory.get(itemCodes[i]);
-   int curItemWeight = itemSet.getItemWeight(itemCodes[i]);
-   stuff += "\n" + itemCodes[i] + " " + itemSet.getItemName(itemCodes[i]) + " " + inventory.get(itemCodes[i]) + " " + itemSet.getItemWeight(itemCodes[i]);
+   double curItemWeight = itemSet.getItem(itemCodes[i]).getWeight();
+   stuff += "\n" + itemCodes[i] + " " + itemSet.getItem(itemCodes[i]).getName() + " " + inventory.get(itemCodes[i]) + " " + itemSet.getItem(itemCodes[i]).getWeight();
   }
   return stuff;
  }
